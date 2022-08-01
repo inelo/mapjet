@@ -1,0 +1,11 @@
+{
+  "name": "@inelo/mapjet-core",
+  "version": "0.3.0-rc.7",
+  "dependencies": {
+    "resize-observer-polyfill": "^1.5.1",
+    "maplibre-gl": "^2.1.9"
+  },
+  "publishConfig": {
+    "registry": "https://pkgs.dev.azure.com/inelo/_packaging/npm-internal/npm/registry/ "
+  }
+}

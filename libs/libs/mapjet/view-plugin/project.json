@@ -1,0 +1,39 @@
+{
+  "root": "libs/mapjet/view-plugin",
+  "sourceRoot": "libs/mapjet/view-plugin/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/mapjet/view-plugin/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/mapjet/view-plugin"],
+      "options": {
+        "jestConfig": "libs/mapjet/view-plugin/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/mapjet/view-plugin",
+        "tsConfig": "libs/mapjet/view-plugin/tsconfig.lib.json",
+        "packageJson": "libs/mapjet/view-plugin/package.json",
+        "main": "libs/mapjet/view-plugin/src/index.ts",
+        "assets": ["libs/mapjet/view-plugin/*.md", "registry/.npmrc"]
+      },
+      "configurations": {
+        "production": {
+          "outputPath": "dist/lib/mapjet-view-plugin"
+        }
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

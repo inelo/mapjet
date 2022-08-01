@@ -1,0 +1,95 @@
+{
+  "projectType": "application",
+  "root": "apps/mapjet-playground",
+  "sourceRoot": "apps/mapjet-playground/src",
+  "prefix": "libs",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mapjet-playground",
+        "index": "apps/mapjet-playground/src/index.html",
+        "main": "apps/mapjet-playground/src/main.ts",
+        "polyfills": "apps/mapjet-playground/src/polyfills.ts",
+        "tsConfig": "apps/mapjet-playground/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/mapjet-playground/src/favicon.ico",
+          "apps/mapjet-playground/src/assets"
+        ],
+        "styles": [
+          "apps/mapjet-playground/src/styles.scss",
+          "node_modules/maplibre-gl/dist/maplibre-gl.css"
+        ],
+        "scripts": [],
+        "webWorkerTsConfig": "apps/mapjet-playground/tsconfig.worker.json"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/mapjet-playground/src/environments/environment.ts",
+              "with": "apps/mapjet-playground/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "mapjet-playground:build:production"
+        },
+        "development": {
+          "browserTarget": "mapjet-playground:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "mapjet-playground:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/mapjet-playground/src/**/*.ts", "apps/mapjet-playground/src/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/mapjet-playground"],
+      "options": {
+        "jestConfig": "apps/mapjet-playground/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

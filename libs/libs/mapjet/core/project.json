@@ -1,0 +1,39 @@
+{
+  "root": "libs/mapjet/core",
+  "sourceRoot": "libs/mapjet/core/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/mapjet/core/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/mapjet/core"],
+      "options": {
+        "jestConfig": "libs/mapjet/core/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/mapjet/core",
+        "tsConfig": "libs/mapjet/core/tsconfig.lib.json",
+        "packageJson": "libs/mapjet/core/package.json",
+        "main": "libs/mapjet/core/src/index.ts",
+        "assets": ["libs/mapjet/core/*.md", "registry/.npmrc"]
+      },
+      "configurations": {
+        "production": {
+          "outputPath": "dist/lib/mapjet-core"
+        }
+      }
+    }
+  },
+  "tags": ["scope:public", "type:util", "target:all"]
+}
