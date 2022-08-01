@@ -7,7 +7,8 @@
     "build": "nx build",
     "postinstall": "ngcc --properties es2015 browser module main",
     "serve": "nx serve mapjet-playground",
-    "test": "nx test"
+    "test": "nx test",
+    "clear:cache": "nx clear-cache"
   },
   "dependencies": {
     "@angular/animations": "~13.1.3",
