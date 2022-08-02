@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@inelo/mapjet-core": ["libs/mapjet/core/src/index.ts"],
-      "@inelo/mapjet-view-plugin": ["libs/mapjet/view-plugin/src/index.ts"]
+      "@inelo/mapjet-core": ["libs/mapjet-core/src/index.ts"],
+      "@inelo/mapjet-view-plugin": ["libs/mapjet-view-plugin/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

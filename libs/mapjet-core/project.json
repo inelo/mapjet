@@ -1,20 +1,20 @@
 {
-  "root": "libs/mapjet/core",
-  "sourceRoot": "libs/mapjet/core/src",
+  "root": "libs/mapjet-core",
+  "sourceRoot": "libs/mapjet-core/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/mapjet/core/**/*.ts"]
+        "lintFilePatterns": ["libs/mapjet-core/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/mapjet/core"],
+      "outputs": ["coverage/libs/mapjet-core"],
       "options": {
-        "jestConfig": "libs/mapjet/core/jest.config.js",
+        "jestConfig": "libs/mapjet-core/jest.config.js",
         "passWithNoTests": true
       }
     },
@@ -22,11 +22,11 @@
       "executor": "@nrwl/node:package",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/mapjet/core",
-        "tsConfig": "libs/mapjet/core/tsconfig.lib.json",
-        "packageJson": "libs/mapjet/core/package.json",
-        "main": "libs/mapjet/core/src/index.ts",
-        "assets": ["libs/mapjet/core/*.md", "registry/.npmrc"]
+        "outputPath": "dist/libs/mapjet-core",
+        "tsConfig": "libs/mapjet-core/tsconfig.lib.json",
+        "packageJson": "libs/mapjet-core/package.json",
+        "main": "libs/mapjet-core/src/index.ts",
+        "assets": ["libs/mapjet-core/*.md", "registry/.npmrc"]
       },
       "configurations": {
         "production": {

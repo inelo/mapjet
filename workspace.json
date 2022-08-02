@@ -1,9 +1,9 @@
 {
   "version": 2,
   "projects": {
-    "mapjet-core": "libs/mapjet/core",
+    "mapjet-core": "libs/mapjet-core",
+    "mapjet-view-plugin": "libs/mapjet-view-plugin",
     "mapjet-playground": "apps/mapjet-playground",
-    "mapjet-playground-e2e": "apps/mapjet-playground-e2e",
-    "mapjet-view-plugin": "libs/mapjet/view-plugin"
+    "mapjet-playground-e2e": "apps/mapjet-playground-e2e"
   }
 }
