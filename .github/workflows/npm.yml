@@ -33,6 +33,16 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org
           scope: '@inelo'
+          
+      - name: Setup yarn
+        run: npm install -g yarn
+      
+      - name: Setup Nodejs with yarn caching
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          
       - run: yarn ci:install
       - run: yarn ci:version:prod
       - run: yarn ci:publish
