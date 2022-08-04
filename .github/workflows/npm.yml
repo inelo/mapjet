@@ -1,8 +1,12 @@
 name: NPM Publish
 
 on:
-  release:
-    types: [created]
+  pull_request:
+    types: [opened, synchronize]
+    
+# on:
+#   release:
+#     types: [created]
 
 jobs:
   build:
