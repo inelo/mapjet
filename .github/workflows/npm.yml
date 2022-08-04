@@ -1,8 +1,9 @@
 name: NPM Publish
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    branches:
+      - master
     
 # on:
 #   release:
