@@ -1,4 +1,4 @@
-name: NPM Publish
+name: Publish
 
 on:
   push:
@@ -25,6 +25,11 @@ jobs:
           node-version: 16
           cache: yarn
 
+      - name: Checkout and pull branch
+        run: |
+          echo running on branch ${GITHUB_REF##*/}
+          git checkout "${GITHUB_REF:11}" && git pull
+
       - name: Install dependencies
         run: yarn ci:install
 
@@ -48,6 +53,11 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org
           scope: '@inelo'
+
+      - name: Checkout and pull branch
+        run: |
+          echo running on branch ${GITHUB_REF##*/}
+          git checkout "${GITHUB_REF:11}" && git pull
 
       - name: Install dependencies
         run: yarn ci:install
