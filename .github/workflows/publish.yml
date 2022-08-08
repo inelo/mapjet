@@ -53,10 +53,8 @@ jobs:
           registry-url: https://registry.npmjs.org
           scope: '@inelo'
 
-      - name: Checkout and pull branch
-        run: |
-          echo running on branch ${GITHUB_REF##*/}
-          git checkout HEAD^
+      - name: Branch info
+        run: echo running on branch ${GITHUB_REF##*/}
 
       - name: Install dependencies
         run: yarn ci:install
