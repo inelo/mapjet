@@ -1,0 +1,75 @@
+name: NPM Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Nodejs and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Setup yarn
+        run: npm install -g yarn
+
+      - name: Setup Nodejs with yarn caching
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn ci:install
+
+      - name: Run test
+        run: yarn ci:test
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Nodejs and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+          scope: '@inelo'
+
+      - name: Install dependencies
+        run: yarn ci:install
+
+      - name: Git Config
+        run: |
+          git config user.name "${{ github.actor }}[github:ci]"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Bump Version
+        continue-on-error: true
+        id: graduateRelease
+        run: yarn ci:version:build
+
+      - name: Bump Version Fallback
+        if: ${{ always() && steps.graduateRelease.outcome == 'failure'  }}
+        run: |
+          echo Falling back to non-graduate release due to https://github.com/lerna/lerna/issues/2532
+          git stash
+          yarn ci:version:fallback
+
+      - name: Publish
+        run: yarn ci:publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

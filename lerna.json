@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "useNx": true,
+  "useWorkspaces": true,
+  "npmClient": "yarn",
+  "version": "independent",
+  "command": {
+    "publish": {
+      "bump": "patch",
+      "conventionalCommits": true,
+      "conventionalGraduate": true,
+      "message": "chore(release): updated release notes and package versions"
+    }
+  }
+}

@@ -1,7 +1,11 @@
 {
   "name": "@inelo/mapjet-view-plugin",
   "version": "0.2.0",
+  "license": "MIT",
   "peerDependencies": {
     "@inelo/mapjet-core": "1.* || 2.* || 0.*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
