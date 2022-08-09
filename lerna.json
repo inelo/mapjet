@@ -7,8 +7,6 @@
   "command": {
     "publish": {
       "bump": "patch",
-      "conventionalCommits": true,
-      "conventionalGraduate": true,
       "message": "chore(release): updated release notes and package versions"
     }
   }
