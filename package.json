@@ -52,7 +52,6 @@
     "@nrwl/jest": "14.5.5-beta.0",
     "@nrwl/linter": "14.5.5-beta.0",
     "@nrwl/node": "14.5.5-beta.0",
-    "@nrwl/tao": "14.5.5-beta.0",
     "@nrwl/web": "14.5.5-beta.0",
     "@nrwl/workspace": "14.5.5-beta.0",
     "@turf/helpers": "^6.5.0",
@@ -78,10 +77,10 @@
     "prettier": "2.7.1",
     "resize-observer-polyfill": "^1.5.1",
     "ts-jest": "27.1.4",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "nx": "14.5.5-beta.0"
   },
   "workspaces": [
     "libs/*"
   ]
 }
-
