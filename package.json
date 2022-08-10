@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "nx build",
-    "postinstall": "ngcc --properties es2015 browser module main",
+    "postinstall": "ngcc --properties es2020 browser module main",
     "serve": "nx serve mapjet-playground",
     "test": "nx test",
     "ci:install": "yarn install --frozen-lockfile",
