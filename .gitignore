@@ -2,6 +2,9 @@
 
 # compiled output
 /dist
+libs/mapjet-core/dist/
+libs/mapjet-view-plugin/dist/
+
 /tmp
 /out-tsc
 

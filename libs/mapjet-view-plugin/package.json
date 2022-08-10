@@ -1,7 +1,28 @@
 {
   "name": "@inelo/mapjet-view-plugin",
   "version": "0.2.2",
+  "author": "Inelo <rwalus@inelo.pl>",
   "license": "MIT",
+  "main": "dist/src/index",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist"],
+  "keywords": [
+    "javascript",
+    "typescript",
+    "angular",
+    "mapjet-gl",
+    "mapjet-core",
+    "mapjet-view-plugin",
+    "inelo"
+  ],
+  "homepage": "https://github.com/inelo/mapjet/tree/master/libs/mapjet-view-plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inelo/mapjet.git"
+  },
+  "scripts": {
+    "clean": "rm -rf ./dist"
+  },
   "peerDependencies": {
     "@inelo/mapjet-core": "1.* || 2.* || 0.*"
   },

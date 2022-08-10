@@ -22,7 +22,7 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/mapjet-view-plugin",
+        "outputPath": "libs/mapjet-view-plugin/dist",
         "tsConfig": "libs/mapjet-view-plugin/tsconfig.lib.json",
         "packageJson": "libs/mapjet-view-plugin/package.json",
         "main": "libs/mapjet-view-plugin/src/index.ts",

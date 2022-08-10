@@ -1,6 +1,6 @@
 {
-  "name": "libs",
-  "version": "0.1.0",
+  "name": "@inelo/mapjet",
+  "version": "0.1.1",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -10,6 +10,7 @@
     "test": "nx test",
     "ci:install": "yarn install --frozen-lockfile",
     "ci:build": "npx nx run-many --target=build --projects=mapjet-core,mapjet-view-plugin",
+    "ci:clean":"npx nx run-many --target=clean --projects=mapjet-core,mapjet-view-plugin",
     "ci:test": "lerna run test",
     "ci:version:build": "npx lerna version --conventional-commits --conventional-graduate --yes",
     "ci:version:fallback": "npx lerna version --conventional-commits --yes",

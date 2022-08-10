@@ -22,7 +22,7 @@
       "executor": "@nrwl/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/mapjet-core",
+        "outputPath": "libs/mapjet-core/dist",
         "tsConfig": "libs/mapjet-core/tsconfig.lib.json",
         "packageJson": "libs/mapjet-core/package.json",
         "main": "libs/mapjet-core/src/index.ts",
