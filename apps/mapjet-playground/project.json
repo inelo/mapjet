@@ -17,7 +17,11 @@
         "assets": ["apps/mapjet-playground/src/favicon.ico", "apps/mapjet-playground/src/assets"],
         "styles": ["apps/mapjet-playground/src/styles.scss", "node_modules/maplibre-gl/dist/maplibre-gl.css"],
         "scripts": [],
-        "webWorkerTsConfig": "apps/mapjet-playground/tsconfig.worker.json"
+        "webWorkerTsConfig": "apps/mapjet-playground/tsconfig.worker.json",
+        "allowedCommonJsDependencies": [
+          "lodash",
+          "maplibre-gl"
+        ]
       },
       "configurations": {
         "production": {

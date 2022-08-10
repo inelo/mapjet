@@ -77,6 +77,8 @@ jobs:
           yarn ci:version:fallback
 
       - name: Publish
-        run: yarn ci:publish
+        run: |
+          yarn ci:build
+          yarn ci:publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

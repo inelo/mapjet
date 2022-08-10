@@ -9,7 +9,7 @@
     "serve": "nx serve mapjet-playground",
     "test": "nx test",
     "ci:install": "yarn install --frozen-lockfile",
-    "ci:build": "lerna run build",
+    "ci:build": "npx nx run-many --target=build --projects=mapjet-core,mapjet-view-plugin",
     "ci:test": "lerna run test",
     "ci:version:build": "npx lerna version --conventional-commits --conventional-graduate --yes",
     "ci:version:fallback": "npx lerna version --conventional-commits --yes",
