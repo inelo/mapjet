@@ -1,5 +1,5 @@
 /* eslint-disable */
-module.exports = {
+export default {
   displayName: 'mapjet-view-plugin',
   preset: '../../../jest.preset.js',
   globals: {
