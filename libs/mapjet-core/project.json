@@ -1,5 +1,4 @@
 {
-  "root": "libs/mapjet-core",
   "sourceRoot": "libs/mapjet-core/src",
   "projectType": "library",
   "targets": {

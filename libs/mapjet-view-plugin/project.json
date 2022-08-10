@@ -1,5 +1,4 @@
 {
-  "root": "libs/mapjet-view-plugin",
   "sourceRoot": "libs/mapjet-view-plugin/src",
   "projectType": "library",
   "targets": {

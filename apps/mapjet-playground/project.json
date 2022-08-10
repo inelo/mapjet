@@ -1,6 +1,5 @@
 {
   "projectType": "application",
-  "root": "apps/mapjet-playground",
   "sourceRoot": "apps/mapjet-playground/src",
   "prefix": "libs",
   "targets": {
@@ -14,14 +13,8 @@
         "polyfills": "apps/mapjet-playground/src/polyfills.ts",
         "tsConfig": "apps/mapjet-playground/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/mapjet-playground/src/favicon.ico",
-          "apps/mapjet-playground/src/assets"
-        ],
-        "styles": [
-          "apps/mapjet-playground/src/styles.scss",
-          "node_modules/maplibre-gl/dist/maplibre-gl.css"
-        ],
+        "assets": ["apps/mapjet-playground/src/favicon.ico", "apps/mapjet-playground/src/assets"],
+        "styles": ["apps/mapjet-playground/src/styles.scss", "node_modules/maplibre-gl/dist/maplibre-gl.css"],
         "scripts": [],
         "webWorkerTsConfig": "apps/mapjet-playground/tsconfig.worker.json"
       },
