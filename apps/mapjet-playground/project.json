@@ -80,7 +80,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/apps/mapjet-playground"],
       "options": {
-        "jestConfig": "apps/mapjet-playground/jest.config.js",
+        "jestConfig": "apps/mapjet-playground/jest.config.ts",
         "passWithNoTests": true
       }
     }

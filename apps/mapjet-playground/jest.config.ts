@@ -1,3 +1,4 @@
+/* eslint-disable */
 module.exports = {
   displayName: 'mapjet-playground',
   preset: '../../jest.preset.js',

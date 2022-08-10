@@ -14,7 +14,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/mapjet-core"],
       "options": {
-        "jestConfig": "libs/mapjet-core/jest.config.js",
+        "jestConfig": "libs/mapjet-core/jest.config.ts",
         "passWithNoTests": true
       }
     },

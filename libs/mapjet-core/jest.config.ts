@@ -1,5 +1,6 @@
+/* eslint-disable */
 module.exports = {
-  displayName: 'mapjet-view-plugin',
+  displayName: 'mapjet-core',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +12,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/mapjet-view-plugin',
+  coverageDirectory: '../../../coverage/lib/mapjet-core',
 };
