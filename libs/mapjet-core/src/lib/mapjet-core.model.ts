@@ -4,7 +4,7 @@ import type { MapJet } from './mapjet-core';
 
 export type MapJetOptions = {
   container: MapOptions['container'];
-  style: StyleSpecification | string;
+  style?: StyleSpecification | string;
   mapOptions?: MapOptions;
   internalMapOptions?: InternalMapOptions;
   resizeObserver?: boolean;

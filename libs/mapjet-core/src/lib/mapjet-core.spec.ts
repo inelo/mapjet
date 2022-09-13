@@ -38,10 +38,10 @@ describe('MapJet', () => {
 
     expect(MapLibre).toHaveBeenCalledWith({
       container: 'test',
-      style: '',
       dragRotate: false,
       center: [7, 44],
       minZoom: 2.5,
+      style: '',
     });
 
     expect(map.scrollZoom.setWheelZoomRate).toBeCalledWith(1 / 140);
@@ -303,7 +303,6 @@ describe('MapJet', () => {
           new MapJet({
             ...(val !== 'noKey' && { resizeObserver: val as any }),
             container: 'test',
-            style: '',
           });
         });
 
@@ -314,7 +313,6 @@ describe('MapJet', () => {
         new MapJet({
           resizeObserver: false,
           container: 'test',
-          style: '',
         });
 
         expect(ContainerResizeObserverPlugin).not.toHaveBeenCalled();
@@ -330,7 +328,6 @@ describe('MapJet', () => {
         new MapJet({
           debug: true,
           container: 'test',
-          style: '',
         });
 
         expect(Log.enable).toHaveBeenCalled();
@@ -341,7 +338,6 @@ describe('MapJet', () => {
           new MapJet({
             ...(val !== 'noKey' && { debug: val as any }),
             container: 'test',
-            style: '',
           });
         });
 
@@ -352,5 +348,5 @@ describe('MapJet', () => {
 });
 
 function createCore(opts: Partial<MapJetOptions> = {}) {
-  return new MapJet({ container: 'test', style: '', ...opts });
+  return new MapJet({ container: 'test', ...opts });
 }
