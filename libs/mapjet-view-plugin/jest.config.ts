@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'mapjet-view-plugin',
-  preset: '../../../jest.preset.js',
+  preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -12,5 +12,5 @@ export default {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/mapjet-view-plugin',
+  coverageDirectory: '../../coverage/libs/mapjet-view-plugin',
 };
