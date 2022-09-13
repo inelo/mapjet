@@ -119,7 +119,7 @@ describe('MapJet', () => {
       jest.spyOn(plugin, 'onAdd');
       mapCore.addPlugin(plugin);
 
-      expect(Log.info).toHaveBeenCalledWith('MapJet has been destroyed, plugin cannot be added');
+      expect(Log.info).toHaveBeenCalledWith('Mapjet was destroyed. This operation will have no effect.');
       expect(plugin.onAdd).not.toHaveBeenCalled();
       expect(() => mapCore.addPlugin(plugin)).not.toThrow();
     });
@@ -182,7 +182,9 @@ describe('MapJet', () => {
       jest.spyOn(plugin, 'onRemove');
       mapCore.removePlugin(plugin);
 
-      expect(Log.info).toHaveBeenCalledWith('MapJet has been destroyed, plugin cannot be removed');
+      expect(Log.info).toHaveBeenCalledWith(
+        'Mapjet was destroyed, all plugins were removed during this operation. This operation will have no effect.'
+      );
       expect(plugin.onRemove).not.toHaveBeenCalled();
       expect(() => mapCore.removePlugin(plugin)).not.toThrow();
     });

@@ -42,7 +42,7 @@ export class MapJet {
 
   public addPlugin(plugin: MapJetPlugin) {
     if (this.destroyed) {
-      Log.info('MapJet has been destroyed, plugin cannot be added');
+      Log.info('Mapjet was destroyed. This operation will have no effect.');
       return;
     }
 
@@ -58,7 +58,9 @@ export class MapJet {
 
   public removePlugin(plugin: MapJetPlugin) {
     if (this.destroyed) {
-      Log.info('MapJet has been destroyed, plugin cannot be removed');
+      Log.info(
+        'Mapjet was destroyed, all plugins were removed during this operation. This operation will have no effect.'
+      );
       return;
     }
 
