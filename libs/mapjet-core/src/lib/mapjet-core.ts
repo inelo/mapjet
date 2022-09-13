@@ -9,6 +9,12 @@ import type { MapJetEventType, MapJetOptions, MapJetPlugin } from './mapjet-core
 export class MapJet {
   public readonly map: MapLibre;
 
+  public get isDestroyed(): boolean {
+    return this.destroyed;
+  }
+
+  private destroyed: boolean = false;
+
   private readonly plugins = new Map<string, MapJetPlugin>();
   private readonly dispatcher = new Dispatcher();
 
@@ -35,6 +41,11 @@ export class MapJet {
   }
 
   public addPlugin(plugin: MapJetPlugin) {
+    if (this.destroyed) {
+      Log.info('MapJet has been destroyed, plugin cannot be added');
+      return;
+    }
+
     if (this.plugins.has(plugin.id)) {
       throw new Error(`Plugin with id ${plugin.id} already exists`);
     }
@@ -46,6 +57,11 @@ export class MapJet {
   }
 
   public removePlugin(plugin: MapJetPlugin) {
+    if (this.destroyed) {
+      Log.info('MapJet has been destroyed, plugin cannot be removed');
+      return;
+    }
+
     if (!this.plugins.has(plugin.id)) {
       throw new Error(`Plugin with id ${plugin.id} not exists`);
     }
@@ -69,6 +85,7 @@ export class MapJet {
     this.map.remove();
     this.dispatch('destroy', this);
     this.plugins.clear();
+    this.destroyed = true;
   }
 
   public on(event: MapJetEventType, callback: (...args: any) => void) {

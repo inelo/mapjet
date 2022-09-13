@@ -70,6 +70,7 @@ describe('MapJet', () => {
 
     beforeEach(() => {
       mapCore = createCore();
+      jest.resetAllMocks();
     });
 
     it('should throw error when plugin with same id exists', () => {
@@ -109,6 +110,19 @@ describe('MapJet', () => {
 
       expect(Log.info).toHaveBeenCalledWith('Added new plugin', plugin);
     });
+
+    it('should no register plugin and log message when mapjet destroyed', () => {
+      mapCore = createCore({ debug: true });
+      const plugin = { ...FakePlugin };
+
+      mapCore.destroy();
+      jest.spyOn(plugin, 'onAdd');
+      mapCore.addPlugin(plugin);
+
+      expect(Log.info).toHaveBeenCalledWith('MapJet has been destroyed, plugin cannot be added');
+      expect(plugin.onAdd).not.toHaveBeenCalled();
+      expect(() => mapCore.addPlugin(plugin)).not.toThrow();
+    });
   });
 
   describe('removePlugin', () => {
@@ -116,6 +130,7 @@ describe('MapJet', () => {
 
     beforeEach(() => {
       mapCore = createCore();
+      jest.resetAllMocks();
     });
 
     it('should throw error when plugin with id not exists', () => {
@@ -152,8 +167,24 @@ describe('MapJet', () => {
       const plugin = { ...FakePlugin };
 
       mapCore.addPlugin(plugin);
+      mapCore.removePlugin(plugin);
 
       expect(Log.info).toHaveBeenCalledWith('Removed plugin', plugin);
+    });
+
+    it('should no deregister plugin and log message when mapjet destroyed', () => {
+      mapCore = createCore({ debug: true });
+      const plugin = { ...FakePlugin };
+
+      mapCore.addPlugin(plugin);
+      mapCore.destroy();
+
+      jest.spyOn(plugin, 'onRemove');
+      mapCore.removePlugin(plugin);
+
+      expect(Log.info).toHaveBeenCalledWith('MapJet has been destroyed, plugin cannot be removed');
+      expect(plugin.onRemove).not.toHaveBeenCalled();
+      expect(() => mapCore.removePlugin(plugin)).not.toThrow();
     });
   });
 
@@ -213,6 +244,14 @@ describe('MapJet', () => {
 
       mapCore.destroy();
     });
+
+    it('should change state isDestroyed property', () => {
+      expect(mapCore.isDestroyed).toEqual(false);
+
+      mapCore.destroy();
+
+      expect(mapCore.isDestroyed).toEqual(true);
+    });
   });
 
   describe('on', () => {
@@ -262,6 +301,7 @@ describe('MapJet', () => {
           new MapJet({
             ...(val !== 'noKey' && { resizeObserver: val as any }),
             container: 'test',
+            style: '',
           });
         });
 
@@ -272,6 +312,7 @@ describe('MapJet', () => {
         new MapJet({
           resizeObserver: false,
           container: 'test',
+          style: '',
         });
 
         expect(ContainerResizeObserverPlugin).not.toHaveBeenCalled();
@@ -287,6 +328,7 @@ describe('MapJet', () => {
         new MapJet({
           debug: true,
           container: 'test',
+          style: '',
         });
 
         expect(Log.enable).toHaveBeenCalled();
@@ -297,6 +339,7 @@ describe('MapJet', () => {
           new MapJet({
             ...(val !== 'noKey' && { debug: val as any }),
             container: 'test',
+            style: '',
           });
         });
 
@@ -307,5 +350,5 @@ describe('MapJet', () => {
 });
 
 function createCore(opts: Partial<MapJetOptions> = {}) {
-  return new MapJet({ container: 'test', ...opts });
+  return new MapJet({ container: 'test', style: '', ...opts });
 }
