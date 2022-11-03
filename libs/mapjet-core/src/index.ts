@@ -7,3 +7,4 @@ export * from './lib/utils/models';
 export * from './lib/controller';
 export * from './lib/utils-test/mapjet.mock';
 export * from './lib/utils-test/svg.mock';
+export { LayerEvent } from './lib/utils/layer-event-handler';
