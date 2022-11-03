@@ -1,5 +1,12 @@
 import { Map, MapEvent } from 'maplibre-gl';
 
+export type LayerEvent<T> = {
+  cancelBubble: boolean;
+  cancelImmediate: boolean;
+  stopPropagation(): void;
+  stopImmediatePropagation(): void;
+} & T;
+
 // Code example: https://github.com/mapbox/mapbox-gl-js/issues/5783#issuecomment-394856120
 export class LayerEventHandler {
   private readonly map: Map;
@@ -15,7 +22,7 @@ export class LayerEventHandler {
     this._onMapEvent = this._onMapEvent.bind(this);
   }
 
-  public on(eventName: MapEvent, layerId: string, callback: () => any): void {
+  public on(eventName: MapEvent, layerId: string | null, callback: (...args: any[]) => any): void {
     if (!this.defaultHandlers[eventName] && !this.handlers[eventName]) {
       // Create new event name keys in our storage maps
       this.defaultHandlers[eventName] = [];
@@ -30,14 +37,15 @@ export class LayerEventHandler {
       this.defaultHandlers[eventName].push(callback);
     } else {
       // layerId is specified, so this is a specific handler for that layer
-      this.handlers[eventName][layerId] = callback;
+      this.handlers[eventName][layerId] = [...(this.handlers[eventName][layerId] || []), callback];
     }
   }
 
-  public off(eventName: MapEvent, layerId: string): void {
-    if (this.handlers[eventName] && this.handlers[eventName][layerId]) {
-      this.handlers[eventName][layerId] = null;
-      delete this.handlers[eventName][layerId];
+  public off(eventName: MapEvent, layerId: string | null, callbackRef: (...args: any[]) => any): void {
+    if (layerId && this.handlers[eventName] && this.handlers[eventName][layerId]) {
+      this.handlers[eventName][layerId] = this.handlers[eventName][layerId].filter(cb => cb !== callbackRef);
+    } else if (!layerId && this.defaultHandlers[eventName]) {
+      this.defaultHandlers[eventName] = this.defaultHandlers[eventName].filter(cb => cb !== callbackRef);
     }
   }
 
@@ -52,15 +60,22 @@ export class LayerEventHandler {
     // This makes a sorted array of the layers that are clicked
     var sortedLayers = eventFeatures.reduce((sorted: any[], next) => {
       let nextLayerId = next.layer.id;
-      if (sorted.indexOf(nextLayerId) === -1) {
-        return sorted.concat([nextLayerId]);
-      }
-      return sorted;
+      return sorted.indexOf(nextLayerId) === -1 ? sorted.concat([nextLayerId]) : sorted;
     }, []);
 
     // Add the layers and features info to the event
     event.eventLayers = sortedLayers;
     event.eventFeatures = eventFeatures;
+    event.cancelBubble = false;
+    event.cancelImmediate = false;
+
+    event.stopPropagation = function () {
+      this.cancelBubble = true;
+    };
+
+    event.stopImmediatePropagation = function () {
+      this.cancelImmediate = true;
+    };
 
     let bubbleEvent = true;
 
@@ -77,7 +92,15 @@ export class LayerEventHandler {
       });
 
       // Call the layer handler for this layer, giving the clicked features
-      bubbleEvent = this.handlers[eventName][layerId](event, layerFeatures);
+      for (const callback of this.handlers[eventName][layerId]) {
+        callback(event, layerFeatures);
+
+        bubbleEvent = !event.cancelBubble;
+
+        if (event.cancelImmediate) {
+          break;
+        }
+      }
     }
 
     if (bubbleEvent === true) {
@@ -86,9 +109,15 @@ export class LayerEventHandler {
         return;
       }
 
-      this.defaultHandlers[eventName].forEach(handler => {
+      for (const handler of this.defaultHandlers[eventName]) {
         handler(event);
-      });
+
+        bubbleEvent = !event.cancelBubble;
+
+        if (!event.cancelImmediate) {
+          break;
+        }
+      }
     }
   }
 
