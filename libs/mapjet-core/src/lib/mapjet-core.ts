@@ -5,9 +5,11 @@ import { Dispatcher } from './utils/dispatcher';
 import { Log } from './utils/log';
 
 import type { MapJetEventType, MapJetOptions, MapJetPlugin } from './mapjet-core.model';
+import { LayerEventHandler } from './utils/layer-event-handler';
 
 export class MapJet {
   public readonly map: MapLibre;
+  public readonly layerEventHandler: LayerEventHandler;
 
   public get isDestroyed(): boolean {
     return this.destroyed;
@@ -37,6 +39,7 @@ export class MapJet {
       this.addPlugin(resizeObserverPlugin);
     }
 
+    this.layerEventHandler = new LayerEventHandler(this.map);
     this.map.scrollZoom.setWheelZoomRate(this.options.internalMapOptions?.scrollZoomSpeed || 1 / 140);
   }
 
