@@ -60,10 +60,7 @@ export class LayerEventHandler {
     // This makes a sorted array of the layers that are clicked
     var sortedLayers = eventFeatures.reduce((sorted: any[], next) => {
       let nextLayerId = next.layer.id;
-      if (sorted.indexOf(nextLayerId) === -1) {
-        return sorted.concat([nextLayerId]);
-      }
-      return sorted;
+      return sorted.indexOf(nextLayerId) === -1 ? sorted.concat([nextLayerId]) : sorted;
     }, []);
 
     // Add the layers and features info to the event
