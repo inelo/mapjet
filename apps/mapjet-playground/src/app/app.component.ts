@@ -21,7 +21,7 @@ export class AppComponent implements AfterViewInit {
 
       const mapCore = new MapJet({
         container: this.mapContainer.nativeElement,
-        style: this.defaultStyle,
+        style: this.defaultStyle || '',
       });
 
       const viewPlugin = new ViewPlugin();
@@ -37,7 +37,7 @@ export class AppComponent implements AfterViewInit {
     return currentYear === startYear ? `${currentYear}` : `${startYear} - ${currentYear}`;
   }
 
-  private get defaultStyle(): StyleSpecification {
+  private get defaultStyle(): any {
     return {
       version: 8,
       sources: {
