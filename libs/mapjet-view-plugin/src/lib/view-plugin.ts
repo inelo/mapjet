@@ -26,7 +26,7 @@ export class ViewPlugin implements MapJetPlugin {
     this.id = this.options.id;
   }
 
-  onAdd(mapJet: MapJet) {
+  public onAdd(mapJet: MapJet): void {
     this.mapJet = mapJet;
 
     if (this.options.keepViewDisabled !== true) {
@@ -37,39 +37,39 @@ export class ViewPlugin implements MapJetPlugin {
     }
   }
 
-  onRemove() {
+  public onRemove(): void {
     this.disableKeepView();
   }
 
-  setView(bounds: LngLatBounds, options?: FitBoundsOptions) {
+  public setView(bounds: LngLatBounds, options?: FitBoundsOptions): void {
     this.bounds = bounds;
     this.fitBoundsOptions = options ?? this.options.fitBoundsOptions;
 
     this.recalculateBounds();
   }
 
-  enableKeepView() {
+  public enableKeepView(): void {
     this.disableKeepView();
     this.keepZoomEnabled = true;
-    this.mapJet.map.on('move', this.mapInteractionHandler);
-    this.mapJet.map.on('resize', this.recalculateBoundsHandler);
+    this.mapJet?.map?.on('move', this.mapInteractionHandler);
+    this.mapJet?.map?.on('resize', this.recalculateBoundsHandler);
   }
 
-  disableKeepView() {
+  public disableKeepView(): void {
     this.keepZoomEnabled = false;
     this.mapJet?.map?.off('move', this.mapInteractionHandler);
     this.mapJet?.map?.off('resize', this.recalculateBoundsHandler);
   }
 
-  private mapInteraction(e: MapLibreEvent<any>) {
+  private mapInteraction(e: MapLibreEvent<any>): void {
     if (e.originalEvent && !['resize', 'orientationchange'].includes(e.originalEvent.type)) {
       this.disableKeepView();
     }
   }
 
-  private recalculateBounds() {
+  private recalculateBounds(): void {
     if (this.keepZoomEnabled && !this.bounds.isEmpty()) {
-      this.mapJet.map.fitBounds(this.bounds, {
+      this.mapJet?.map?.fitBounds(this.bounds, {
         animate: true,
         duration: 500,
         padding: 20,
