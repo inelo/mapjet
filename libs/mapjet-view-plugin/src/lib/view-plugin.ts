@@ -1,11 +1,13 @@
 import { FitBoundsOptions, LngLatBounds, MapLibreEvent } from 'maplibre-gl';
 
-import { MapJetPlugin, MapJet } from '@inelo/mapjet-core';
+import { MapJetPlugin, MapJet, MapJetEventablePlugin, Dispatcher } from '@inelo/mapjet-core';
 
-import { ViewPluginOptions } from './view-plugin.models';
+import { ViewPluginEventType, ViewPluginOptions } from './view-plugin.models';
 
-export class ViewPlugin implements MapJetPlugin {
+export class ViewPlugin implements MapJetPlugin, MapJetEventablePlugin {
   public readonly id: string;
+
+  private readonly dispatcher = new Dispatcher();
 
   private mapJet!: MapJet;
   private options: ViewPluginOptions = {
@@ -32,6 +34,7 @@ export class ViewPlugin implements MapJetPlugin {
     if (this.options.keepViewDisabled !== true) {
       this.enableKeepView();
       this.recalculateBounds();
+      this.fire('loaded', this);
     } else {
       this.disableKeepView();
     }
@@ -39,6 +42,14 @@ export class ViewPlugin implements MapJetPlugin {
 
   public onRemove(): void {
     this.disableKeepView();
+  }
+
+  public on(event: ViewPluginEventType, callback: (...args: any) => void): void {
+    this.dispatcher.on(event, callback);
+  }
+
+  public off(event: ViewPluginEventType, callback: (...args: any) => void) {
+    this.dispatcher.off(event, callback);
   }
 
   public setView(bounds: LngLatBounds, options?: FitBoundsOptions): void {
@@ -77,5 +88,9 @@ export class ViewPlugin implements MapJetPlugin {
         ...this.fitBoundsOptions,
       });
     }
+  }
+
+  private fire(event: ViewPluginEventType, data: any): void {
+    this.dispatcher.fire(event, data);
   }
 }
