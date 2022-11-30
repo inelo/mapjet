@@ -1,6 +1,6 @@
 {
   "name": "@inelo/mapjet-view-plugin",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "author": "Inelo <rwalus@inelo.pl>",
   "license": "MIT",
   "main": "dist/src/index",
