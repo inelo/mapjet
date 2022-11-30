@@ -4,7 +4,7 @@ import { ContainerResizeObserverPlugin } from './util-plugins/container-resize-o
 import { Dispatcher } from './utils/dispatcher';
 import { Log } from './utils/log';
 
-import type { MapJetEventType, MapJetOptions, MapJetPlugin } from './mapjet-core.model';
+import type { MapJetEventType, MapJetOptions, MapJetPlugin, MapJetResourcesPlugin } from './mapjet-core.model';
 import { LayerEventHandler } from './utils/layer-event-handler';
 
 export class MapJet {
@@ -53,6 +53,10 @@ export class MapJet {
       throw new Error(`Plugin with id ${plugin.id} already exists`);
     }
 
+    if (isResourcePlugin(plugin)) {
+      plugin.resourceLoader.attach(this);
+    }
+
     plugin.onAdd(this);
     this.plugins.set(plugin.id, plugin);
     this.dispatch('pluginAdded', plugin);
@@ -69,6 +73,10 @@ export class MapJet {
 
     if (!this.plugins.has(plugin.id)) {
       throw new Error(`Plugin with id ${plugin.id} not exists`);
+    }
+
+    if (isResourcePlugin(plugin)) {
+      plugin.resourceLoader.destroy();
     }
 
     plugin.onRemove(this);
@@ -104,4 +112,8 @@ export class MapJet {
   public dispatch(event: MapJetEventType, data) {
     this.dispatcher.fire(event, data);
   }
+}
+
+function isResourcePlugin(plugin: MapJetPlugin | MapJetResourcesPlugin): plugin is MapJetResourcesPlugin {
+  return 'resourceLoader' in plugin;
 }

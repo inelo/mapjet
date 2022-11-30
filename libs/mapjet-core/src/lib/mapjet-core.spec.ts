@@ -1,9 +1,10 @@
 import { Map as MapLibre } from 'maplibre-gl';
 
 import { MapJet } from './mapjet-core';
-import { MapJetOptions, MapJetPlugin } from './mapjet-core.model';
+import { MapJetOptions, MapJetPlugin, MapJetResourcesPlugin } from './mapjet-core.model';
 import { ContainerResizeObserverPlugin } from './util-plugins/container-resize-observer/container-resize-observer.plugin';
 import { Log } from './utils/log';
+import { ResourceLoader } from './utils/resource-loader/resource-loader';
 
 jest.mock('./util-plugins/container-resize-observer/container-resize-observer.plugin');
 jest.mock('./utils/log');
@@ -26,6 +27,15 @@ const FakePlugin: MapJetPlugin = {
 
 class FakePluginX implements MapJetPlugin {
   public readonly id = '4567';
+
+  onAdd(_mapjet) {}
+
+  onRemove(_mapjet) {}
+}
+
+class FakeResourcePlugin implements MapJetResourcesPlugin {
+  public readonly id = '4567';
+  public readonly resourceLoader: ResourceLoader = new ResourceLoader();
 
   onAdd(_mapjet) {}
 
@@ -89,6 +99,15 @@ describe('MapJet', () => {
       mapCore.addPlugin(plugin);
 
       expect(plugin.onAdd).toHaveBeenCalledWith(mapCore);
+    });
+
+    it('should call attach method on plugin when plugin implements MapJetResourcesPlugin interface', () => {
+      const plugin = new FakeResourcePlugin();
+      jest.spyOn(plugin.resourceLoader, 'attach');
+
+      mapCore.addPlugin(plugin);
+
+      expect(plugin.resourceLoader.attach).toHaveBeenCalledWith(mapCore);
     });
 
     it('should dispatch event', done => {
@@ -187,6 +206,16 @@ describe('MapJet', () => {
       );
       expect(plugin.onRemove).not.toHaveBeenCalled();
       expect(() => mapCore.removePlugin(plugin)).not.toThrow();
+    });
+
+    it('should call destroy method on plugin when plugin implements MapJetResourcesPlugin interface', () => {
+      const plugin = new FakeResourcePlugin();
+      jest.spyOn(plugin.resourceLoader, 'destroy');
+
+      mapCore.addPlugin(plugin);
+      mapCore.removePlugin(plugin);
+
+      expect(plugin.resourceLoader.destroy).toHaveBeenCalledWith();
     });
   });
 
