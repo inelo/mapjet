@@ -28,6 +28,7 @@ export class ResourceLoader {
     }
 
     if (this.destroyed) {
+      this.removeAssets(addedAssets);
       throw new Error('Destroyed');
     }
 
