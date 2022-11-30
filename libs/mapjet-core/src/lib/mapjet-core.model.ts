@@ -1,6 +1,7 @@
 import { MapOptions, StyleSpecification } from 'maplibre-gl';
 
 import type { MapJet } from './mapjet-core';
+import { ResourceLoader } from './utils/resource-loader/resource-loader';
 
 export type MapJetOptions = {
   container: MapOptions['container'];
@@ -29,4 +30,8 @@ export interface MapJetEventablePlugin {
   on(event: string, callback: (...args: any) => void): void;
 
   off(event: string, callback: (...args: any) => void): void;
+}
+
+export interface MapJetResourcesPlugin {
+  resourceLoader: ResourceLoader;
 }
