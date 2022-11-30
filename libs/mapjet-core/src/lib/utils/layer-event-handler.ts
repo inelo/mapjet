@@ -1,8 +1,9 @@
-import { Map, MapEvent } from 'maplibre-gl';
+import { Feature, Map, MapEvent, MapGeoJSONFeature } from 'maplibre-gl';
 
 export type LayerEvent<T> = {
   cancelBubble: boolean;
   cancelImmediate: boolean;
+  features: MapGeoJSONFeature[],
   stopPropagation(): void;
   stopImmediatePropagation(): void;
 } & T;
@@ -50,22 +51,22 @@ export class LayerEventHandler {
   }
 
   private _onMapEvent(event): void {
-    var layers = this.getHandleLayers(event.type); //unordered list of layers to be checked
+    const layers = this.getHandleLayers(event.type); //unordered list of layers to be checked
 
     let eventName = event.type;
 
     // This gets the features that was clicked in the correct layer order
-    var eventFeatures = this.map.queryRenderedFeatures(event.point, { layers: layers });
+    const eventFeatures = this.map.queryRenderedFeatures(event.point, { layers: layers });
 
     // This makes a sorted array of the layers that are clicked
-    var sortedLayers = eventFeatures.reduce((sorted: any[], next) => {
+    const sortedLayers = eventFeatures.reduce((sorted: any[], next) => {
       let nextLayerId = next.layer.id;
       return sorted.indexOf(nextLayerId) === -1 ? sorted.concat([nextLayerId]) : sorted;
     }, []);
 
     // Add the layers and features info to the event
     event.eventLayers = sortedLayers;
-    event.eventFeatures = eventFeatures;
+    event.features = eventFeatures;
     event.cancelBubble = false;
     event.cancelImmediate = false;
 
