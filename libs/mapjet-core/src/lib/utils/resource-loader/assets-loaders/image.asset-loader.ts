@@ -25,6 +25,7 @@ export class ImageAssetLoader implements AssetLoader {
           return;
         }
 
+        console.warn(`Unable to load image(${this.url}), Empty image set.`);
         this.image.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
         resolve();
       };
