@@ -75,11 +75,12 @@ export class MapJet {
       throw new Error(`Plugin with id ${plugin.id} not exists`);
     }
 
+    plugin.onRemove(this);
+
     if (isResourcePlugin(plugin)) {
       plugin.resourceLoader.destroy();
     }
-
-    plugin.onRemove(this);
+    
     this.plugins.delete(plugin.id);
     this.dispatch('pluginRemoved', plugin);
     Log.info('Removed plugin', plugin);
