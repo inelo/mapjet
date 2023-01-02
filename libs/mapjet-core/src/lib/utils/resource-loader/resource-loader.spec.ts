@@ -2,7 +2,7 @@ import { LayerSpecification, Map, SourceSpecification } from 'maplibre-gl';
 import { MapJet } from '../../mapjet-core';
 import { mapJetMock } from '../../utils-test/mapjet.mock';
 import { ResourceLoader } from './resource-loader';
-import { AssetLoader, SourceLoader } from './resource-loader.model';
+import { AssetLoader, LayerLoader, SourceLoader } from './resource-loader.model';
 
 class FakeAssetLoader implements AssetLoader {
   public successLoad: () => void;
@@ -41,7 +41,7 @@ describe('ResourceLoader', () => {
       const mapJet = mapJetMock();
       const resourceLoader = new ResourceLoader();
       const assetLoader = new FakeAssetLoader();
-      const layer: LayerSpecification = <LayerSpecification>{ id: '__FAKE_LAYER__' };
+      const layer: LayerLoader = <LayerLoader>{ specification: { id: '__FAKE_LAYER__' } };
       const source: SourceLoader = <SourceLoader>{ id: '__FAKE_SOURCE__' };
 
       resourceLoader.attach(mapJet);
@@ -49,7 +49,7 @@ describe('ResourceLoader', () => {
       jest.spyOn(mapJet.map, 'getSource').mockImplementation((_): any => true);
       jest.spyOn(mapJet.map, 'hasImage').mockImplementation((_): any => true);
 
-      jest.spyOn(assetLoader, 'remove').mockImplementation((map) => map.removeImage(''));
+      jest.spyOn(assetLoader, 'remove').mockImplementation(map => map.removeImage(''));
       jest.spyOn(mapJet.map, 'removeLayer');
       jest.spyOn(mapJet.map, 'removeSource');
       jest.spyOn(mapJet.map, 'removeImage');
@@ -80,7 +80,7 @@ describe('ResourceLoader', () => {
       let mapJet: MapJet;
       let assetLoader: FakeAssetLoader;
 
-      const layer: LayerSpecification = <LayerSpecification>{ id: '__FAKE_LAYER__' };
+      const layer: LayerLoader = <LayerLoader>{ specification: { id: '__FAKE_LAYER__' }, addBefore: 'before_layer' };
       const source: SourceLoader = <SourceLoader>{ id: '__FAKE_SOURCE__' };
 
       beforeEach(() => {
@@ -106,10 +106,9 @@ describe('ResourceLoader', () => {
         }, 200);
 
         await resourceLoader.load([source], [layer], [assetLoader]);
-
         expect(assetLoader.load).toHaveBeenCalled();
         expect(assetLoader.addToMap).toHaveBeenCalledWith(mapJet.map);
-        expect(mapJet.map.addLayer).toHaveBeenCalledWith(layer);
+        expect(mapJet.map.addLayer).toHaveBeenCalledWith(layer.specification, 'before_layer');
         //@ts-ignore
         expect(assetLoader.addToMap).toHaveBeenCalledBefore(mapJet.map.addLayer);
         //@ts-ignore
@@ -210,8 +209,8 @@ describe('ResourceLoader', () => {
       });
 
       test('should unload loaded assets, sources and added layers when add layer throw error', async () => {
-        const throwLayer: LayerSpecification = <LayerSpecification>{ id: 'throw' };
-        const afterThrowLayer: LayerSpecification = <LayerSpecification>{ id: 'after_throw_layer' };
+        const throwLayer: LayerLoader = <LayerLoader>{ specification: { id: 'throw' } };
+        const afterThrowLayer: LayerLoader = <LayerLoader>{ specification: { id: 'after_throw_layer' } };
 
         jest.spyOn(mapJet.map, 'addLayer').mockImplementation(({ id }) => {
           if (id === 'throw') {
@@ -238,11 +237,11 @@ describe('ResourceLoader', () => {
         expect(mapJet.map.addSource).toHaveBeenCalledWith(source.id, source.specification);
         expect(mapJet.map.removeSource).toHaveBeenCalledWith(source.id);
 
-        expect(mapJet.map.addLayer).toHaveBeenCalledWith(throwLayer);
-        expect(mapJet.map.removeLayer).not.toHaveBeenCalledWith(throwLayer);
+        expect(mapJet.map.addLayer).toHaveBeenCalledWith(throwLayer.specification, undefined);
+        expect(mapJet.map.removeLayer).not.toHaveBeenCalledWith(throwLayer.specification.id);
 
-        expect(mapJet.map.addLayer).not.toHaveBeenCalledWith(afterThrowLayer, afterThrowLayer);
-        expect(mapJet.map.removeLayer).not.toHaveBeenCalledWith(afterThrowLayer);
+        expect(mapJet.map.addLayer).not.toHaveBeenCalledWith(afterThrowLayer.specification, afterThrowLayer);
+        expect(mapJet.map.removeLayer).not.toHaveBeenCalledWith(afterThrowLayer.specification.id);
       });
     });
   });

@@ -1,9 +1,9 @@
 import { LayerSpecification } from 'maplibre-gl';
 import { MapJet } from '../../mapjet-core';
-import { AssetLoader, Result, SourceLoader } from './resource-loader.model';
+import { AssetLoader, LayerLoader, Result, SourceLoader } from './resource-loader.model';
 
 export class ResourceLoader {
-  private readonly layers: LayerSpecification[] = [];
+  private readonly layers: LayerLoader[] = [];
   private readonly assets: AssetLoader[] = [];
   private readonly sources: SourceLoader[] = [];
 
@@ -17,7 +17,7 @@ export class ResourceLoader {
     this.mapJet = mapJet;
   }
 
-  public async load(sources: SourceLoader[], layers: LayerSpecification[], assets: AssetLoader[]): Promise<void> {
+  public async load(sources: SourceLoader[], layers: LayerLoader[] = [], assets: AssetLoader[] = []): Promise<void> {
     this.throwIfNoAttached();
 
     const [addedAssetsSuccess, addedAssets, assetsLoadingError] = await this.resolveAssets(assets);
@@ -40,7 +40,6 @@ export class ResourceLoader {
 
       throw addedSourcesError;
     }
-
 
     const [addLayersSuccess, addedLayers, addedLayersError] = this.addLayers(layers);
 
@@ -104,12 +103,13 @@ export class ResourceLoader {
     return [true, addedSources]
   }
 
-  private addLayers(layers: LayerSpecification[]): Result<LayerSpecification[]> {
-    const addedLayers: LayerSpecification[] = [];
+  private addLayers(layers: LayerLoader[]): Result<LayerLoader[]> {
+    const addedLayers: LayerLoader[] = [];
 
     try {
       layers.forEach(layer => {
-        this.mapJet!.map.addLayer(layer);
+        const addBefore = layer.addBefore;
+        this.mapJet!.map.addLayer(layer.specification, layer.addBefore);
         addedLayers.push(layer);
       });
     } catch (error: unknown) {
@@ -137,10 +137,10 @@ export class ResourceLoader {
     assets.forEach(asset => asset.remove(this.mapJet!.map));
   }
 
-  private removeLayers(layers: LayerSpecification[]): void {
+  private removeLayers(layers: LayerLoader[]): void {
     layers.forEach(layer => {
-      if (this.mapJet!.map.getLayer(layer.id)) {
-        this.mapJet!.map.removeLayer(layer.id);
+      if (this.mapJet!.map.getLayer(layer.specification.id)) {
+        this.mapJet!.map.removeLayer(layer.specification.id);
       }
     });
   }
