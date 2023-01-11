@@ -1,11 +1,11 @@
-import { LayerSpecification } from 'maplibre-gl';
+import { LayerSpecification, Source } from 'maplibre-gl';
 import { MapJet } from '../../mapjet-core';
 import { AssetLoader, LayerLoader, Result, SourceLoader } from './resource-loader.model';
 
 export class ResourceLoader {
-  private readonly layers: LayerLoader[] = [];
-  private readonly assets: AssetLoader[] = [];
-  private readonly sources: SourceLoader[] = [];
+  private readonly layers: Map<string, LayerLoader> = new Map();
+  private readonly assets: Map<string, AssetLoader> = new Map();
+  private readonly sources: Map<string, SourceLoader> = new Map();
 
   private mapJet?: MapJet;
   private destroyed: boolean = false;
@@ -45,7 +45,6 @@ export class ResourceLoader {
     const [addLayersSuccess, addedLayers, addedLayersError] = this.addLayers(layers);
 
     if (!addLayersSuccess) {
-
       this.removeLayers(addedLayers);
       this.removeAssets(addedAssets);
       this.removeSources(addedSources);
@@ -53,9 +52,50 @@ export class ResourceLoader {
       throw addedLayersError;
     }
 
-    this.assets.push(...addedAssets);
-    this.sources.push(...addedSources);
-    this.layers.push(...addedLayers);
+    addedAssets.forEach(asset => this.assets.set(asset.id, asset));
+    addedSources.forEach(source => this.sources.set(source.id, source));
+    addedLayers.forEach(layer => this.layers.set(layer.specification.id, layer));
+  }
+
+  public unload(
+    sources: SourceLoader[] | SourceLoader['id'][],
+    layers: LayerLoader[] | LayerLoader['specification']['id'][] = [],
+    assets: AssetLoader[] | AssetLoader['id'][] = []
+  ): void {
+    this.throwIfNoAttached();
+
+    layers.forEach((layerDef: LayerLoader | LayerLoader['specification']['id']) => {
+      const layerId = layerDef instanceof Object ? layerDef.specification.id : layerDef;
+
+      if (this.layers.has(layerId)) {
+        const layer: LayerLoader = this.layers.get(layerId)!;
+
+        this.removeLayers([layer]);
+        this.assets.delete(layer.specification.id);
+      }
+    });
+
+    assets.forEach((assetDef: AssetLoader | string) => {
+      const assetId = assetDef instanceof Object ? assetDef.id : assetDef;
+
+      if (this.assets.has(assetId)) {
+        const asset: AssetLoader = this.assets.get(assetId)!;
+
+        this.removeAssets([asset]);
+        this.assets.delete(asset.id);
+      }
+    });
+
+    sources.forEach((source: SourceLoader | SourceLoader['id']) => {
+      const sourceId = source instanceof Object ? source.id : source;
+
+      if (this.sources.has(sourceId)) {
+        const source: SourceLoader = this.sources.get(sourceId)!;
+
+        this.removeSources([source]);
+        this.sources.delete(source.id);
+      }
+    });
   }
 
   public destroy(): void {
@@ -63,9 +103,9 @@ export class ResourceLoader {
 
     this.destroyed = true;
 
-    this.removeLayers(this.layers);
-    this.removeAssets(this.assets);
-    this.removeSources(this.sources);
+    this.removeLayers(Array.from(this.layers.values()));
+    this.removeAssets(Array.from(this.assets.values()));
+    this.removeSources(Array.from(this.sources.values()));
   }
 
   private async resolveAssets(assets: AssetLoader[]): Promise<Result<AssetLoader[]>> {
@@ -75,10 +115,10 @@ export class ResourceLoader {
       await Promise.all(
         assets.map(async asset => {
           await asset.load(this.mapJet!.map);
-  
+
           if (!this.destroyed) {
             asset.addToMap(this.mapJet!.map);
-            loadedAssets.push(asset)
+            loadedAssets.push(asset);
           }
         })
       );
@@ -101,7 +141,7 @@ export class ResourceLoader {
       return [false, addedSources, error];
     }
 
-    return [true, addedSources]
+    return [true, addedSources];
   }
 
   private addLayers(layers: LayerLoader[]): Result<LayerLoader[]> {
@@ -115,7 +155,7 @@ export class ResourceLoader {
     } catch (error: unknown) {
       return [false, addedLayers, error];
     }
-   
+
     return [true, addedLayers];
   }
 

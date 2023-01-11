@@ -5,6 +5,8 @@ import { ResourceLoader } from './resource-loader';
 import { AssetLoader, LayerLoader, SourceLoader } from './resource-loader.model';
 
 class FakeAssetLoader implements AssetLoader {
+  public readonly id = '123';
+
   public successLoad: () => void;
   public errorLoad: (error?: unknown) => void;
 
@@ -243,6 +245,58 @@ describe('ResourceLoader', () => {
         expect(mapJet.map.addLayer).not.toHaveBeenCalledWith(afterThrowLayer.specification, afterThrowLayer);
         expect(mapJet.map.removeLayer).not.toHaveBeenCalledWith(afterThrowLayer.specification.id);
       });
+    });
+  });
+
+  describe('unload()', () => {
+    test('should throw error when no attached', () => {
+      const resourceLoader = new ResourceLoader();
+
+      expect(() => resourceLoader.unload([], [], [])).toThrow('Resource Loader no attached');
+    });
+
+    describe('when attached', () => {
+      let resourceLoader: ResourceLoader;
+      let mapJet: MapJet;
+      let assetLoader: FakeAssetLoader = new FakeAssetLoader();
+
+      const layer: LayerLoader = <LayerLoader>{ specification: { id: '__FAKE_LAYER__' }, addBefore: 'before_layer' };
+      const source: SourceLoader = <SourceLoader>{ id: '__FAKE_SOURCE__' };
+
+      beforeEach(() => {
+        mapJet = mapJetMock();
+        resourceLoader = new ResourceLoader();
+        resourceLoader.attach(mapJet);
+
+        jest.spyOn(assetLoader, 'load');
+        jest.spyOn(assetLoader, 'addToMap');
+        jest.spyOn(assetLoader, 'remove');
+        jest.spyOn(mapJet.map, 'addLayer');
+        jest.spyOn(mapJet.map, 'removeLayer');
+        jest.spyOn(mapJet.map, 'getLayer');
+        jest.spyOn(mapJet.map, 'addSource');
+        jest.spyOn(mapJet.map, 'getSource');
+        jest.spyOn(mapJet.map, 'removeSource');
+      });
+
+      [[[source], [layer], [assetLoader]], [[source.id], [layer.specification.id], [assetLoader.id]]].forEach(
+        removeDefinition => {
+          test('should remove elements from map', async () => {
+            setTimeout(() => {
+              assetLoader.successLoad();
+            }, 10);
+            jest.spyOn(mapJet.map, 'getLayer').mockImplementation((_): any => true);
+            jest.spyOn(mapJet.map, 'getSource').mockImplementation((_): any => true);
+
+            await resourceLoader.load([source], [layer], [assetLoader]);
+            resourceLoader.unload.apply(resourceLoader, removeDefinition);
+
+            expect(assetLoader.remove).toHaveBeenCalled();
+            expect(mapJet.map.removeLayer).toHaveBeenCalledWith(layer.specification.id);
+            expect(mapJet.map.removeSource).toHaveBeenCalledWith(source.id);
+          });
+        }
+      );
     });
   });
 });
