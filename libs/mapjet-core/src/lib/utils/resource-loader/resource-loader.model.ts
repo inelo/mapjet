@@ -1,4 +1,4 @@
-import { Map, SourceSpecification } from "maplibre-gl";
+import { LayerSpecification, Map, SourceSpecification } from 'maplibre-gl';
 
 export interface AssetLoader {
   load(map: Map): Promise<void>;
@@ -9,5 +9,10 @@ export interface AssetLoader {
 export type SourceLoader = {
   id: string;
   specification: SourceSpecification;
-}
+};
 export type Result<T> = [true, T, undefined?] | [false, T, unknown];
+
+export type LayerLoader = {
+  addBefore?: string;
+  specification: LayerSpecification;
+};

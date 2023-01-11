@@ -1,4 +1,4 @@
-import { Map } from 'maplibre-gl';
+import { Map, StyleImageMetadata } from 'maplibre-gl';
 import { AssetLoader } from '../resource-loader.model';
 
 export class ImageAssetLoader implements AssetLoader {
@@ -7,6 +7,7 @@ export class ImageAssetLoader implements AssetLoader {
   constructor(
     protected readonly url: string,
     protected readonly imageName: string,
+    protected readonly styleImage: Partial<StyleImageMetadata> = {},
     protected readonly throwOnLoadError: boolean = false,
     protected readonly throwOnAddError: boolean = false
   ) {
@@ -35,7 +36,7 @@ export class ImageAssetLoader implements AssetLoader {
   }
 
   public addToMap(map: Map): void {
-    map.addImage(this.imageName, this.image);
+    map.addImage(this.imageName, this.image, this.styleImage);
   }
 
   public remove(map: Map): void {
