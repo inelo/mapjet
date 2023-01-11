@@ -14,6 +14,7 @@ export class ResourceLoader {
     if (this.mapJet) {
       throw new Error('Resource Loader is already attached');
     }
+
     this.mapJet = mapJet;
   }
 
@@ -108,7 +109,6 @@ export class ResourceLoader {
 
     try {
       layers.forEach(layer => {
-        const addBefore = layer.addBefore;
         this.mapJet!.map.addLayer(layer.specification, layer.addBefore);
         addedLayers.push(layer);
       });

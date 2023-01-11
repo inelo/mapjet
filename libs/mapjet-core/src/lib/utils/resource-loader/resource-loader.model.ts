@@ -12,4 +12,7 @@ export type SourceLoader = {
 };
 export type Result<T> = [true, T, undefined?] | [false, T, unknown];
 
-export type LayerLoader = { addBefore?: string; specification: LayerSpecification };
+export type LayerLoader = {
+  addBefore?: string;
+  specification: LayerSpecification;
+};
