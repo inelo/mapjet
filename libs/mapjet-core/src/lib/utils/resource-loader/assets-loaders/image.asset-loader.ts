@@ -2,6 +2,8 @@ import { Map, StyleImageMetadata } from 'maplibre-gl';
 import { AssetLoader } from '../resource-loader.model';
 
 export class ImageAssetLoader implements AssetLoader {
+  public readonly id: string;
+  
   protected readonly image: HTMLImageElement;
 
   constructor(
@@ -11,6 +13,7 @@ export class ImageAssetLoader implements AssetLoader {
     protected readonly throwOnLoadError: boolean = false,
     protected readonly throwOnAddError: boolean = false
   ) {
+    this.id = this.imageName;
     this.image = new Image();
   }
 
