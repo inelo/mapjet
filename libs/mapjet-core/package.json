@@ -1,6 +1,6 @@
 {
   "name": "@inelo/mapjet-core",
-  "version": "0.3.17",
+  "version": "0.3.18",
   "author": "Inelo <rwalus@inelo.pl>",
   "license": "MIT",
   "main": "dist/src/index",
