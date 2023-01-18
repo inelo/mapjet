@@ -45,8 +45,16 @@ export class LayerEventHandler {
   public off(eventName: MapEvent, layerId: string | null, callbackRef: (...args: any[]) => any): void {
     if (layerId && this.handlers[eventName] && this.handlers[eventName][layerId]) {
       this.handlers[eventName][layerId] = this.handlers[eventName][layerId].filter(cb => cb !== callbackRef);
+
+      if (this.handlers[eventName][layerId].length === 0) {
+        delete this.handlers[eventName][layerId];
+      }
     } else if (!layerId && this.defaultHandlers[eventName]) {
       this.defaultHandlers[eventName] = this.defaultHandlers[eventName].filter(cb => cb !== callbackRef);
+
+      if (this.defaultHandlers[eventName].length === 0) {
+        delete this.defaultHandlers[eventName];
+      }
     }
   }
 
@@ -56,7 +64,7 @@ export class LayerEventHandler {
     let eventName = event.type;
 
     // This gets the features that was clicked in the correct layer order
-    const eventFeatures = this.map.queryRenderedFeatures(event.point, { layers: layers });
+    const eventFeatures = this.map.queryRenderedFeatures(event.point, { layers: layers, validate: false });
 
     // This makes a sorted array of the layers that are clicked
     const sortedLayers = eventFeatures.reduce((sorted: any[], next) => {
