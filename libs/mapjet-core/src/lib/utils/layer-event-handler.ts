@@ -54,6 +54,8 @@ export class LayerEventHandler {
 
       if (this.defaultHandlers[eventName].length === 0) {
         delete this.defaultHandlers[eventName];
+
+        this.map.off(eventName, this._onMapEvent);
       }
     }
   }
