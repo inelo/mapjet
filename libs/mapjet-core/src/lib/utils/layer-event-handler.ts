@@ -56,7 +56,7 @@ export class LayerEventHandler {
     if (Object.keys(this.handlers[eventName] || {}).length === 0 && this.defaultHandlers[eventName]?.length === 0) {
       this.map.off(eventName, this._onMapEvent);
       delete this.defaultHandlers[eventName];
-      delete this.handlers[eventName][layerId];
+      delete this.handlers[eventName];
     }
   }
 
