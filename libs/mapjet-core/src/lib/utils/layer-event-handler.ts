@@ -51,12 +51,12 @@ export class LayerEventHandler {
       }
     } else if (!layerId && this.defaultHandlers[eventName]) {
       this.defaultHandlers[eventName] = this.defaultHandlers[eventName].filter(cb => cb !== callbackRef);
+    }
 
-      if (this.defaultHandlers[eventName].length === 0) {
-        delete this.defaultHandlers[eventName];
-
-        this.map.off(eventName, this._onMapEvent);
-      }
+    if (Object.keys(this.handlers[eventName] || {}).length === 0 && this.defaultHandlers[eventName]?.length === 0) {
+      this.map.off(eventName, this._onMapEvent);
+      delete this.defaultHandlers[eventName];
+      delete this.handlers[eventName];
     }
   }
 
