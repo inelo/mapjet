@@ -24,7 +24,7 @@ export class LayerEventHandler {
   }
 
   public on(eventName: MapEvent, layerId: string | null, callback: (...args: any[]) => any): void {
-    if (!this.defaultHandlers[eventName] || !this.handlers[eventName]) {
+    if (!this.defaultHandlers[eventName] && !this.handlers[eventName]) {
       // Create new event name keys in our storage maps
       this.defaultHandlers[eventName] = [];
       this.handlers[eventName] = {};
