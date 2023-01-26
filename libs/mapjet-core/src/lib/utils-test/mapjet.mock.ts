@@ -1,4 +1,6 @@
-export const mapJetMock = () =>
+import { MapJet } from "../mapjet-core";
+
+export const mapJetMock = (): MapJet =>
   ({
     map: {
       getContainer() {
@@ -23,7 +25,15 @@ export const mapJetMock = () =>
     getPlugin(_t) {
       return null;
     },
+    getPlugins() {
+      return [];
+    },
     destroy() {},
     on() {},
     off() {},
-  } as any);
+    isDestroyed: false,
+    layerEventHandler: {
+      on() {},
+      off() {}
+    }
+  } as unknown as MapJet);
