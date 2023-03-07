@@ -1,4 +1,4 @@
-export function OnPlugin<T extends string>(pluginId: string, event: T) {
+export function OnPlugin<EM>(pluginId: string, event: keyof EM) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const key = '_pluginDefs';
     let pluginDefs = target[key] || {};

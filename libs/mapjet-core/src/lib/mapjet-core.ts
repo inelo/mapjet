@@ -4,7 +4,7 @@ import { ContainerResizeObserverPlugin } from './util-plugins/container-resize-o
 import { Dispatcher } from './utils/dispatcher';
 import { Log } from './utils/log';
 
-import type { MapJetEventType, MapJetOptions, MapJetPlugin, MapJetResourcesPlugin } from './mapjet-core.model';
+import type { MapJetEventsMap, MapJetOptions, MapJetPlugin, MapJetResourcesPlugin } from './mapjet-core.model';
 import { LayerEventHandler } from './utils/layer-event-handler';
 
 export class MapJet {
@@ -18,7 +18,7 @@ export class MapJet {
   private destroyed: boolean = false;
 
   private readonly plugins = new Map<string, MapJetPlugin>();
-  private readonly dispatcher = new Dispatcher();
+  private readonly dispatcher: Dispatcher<MapJetEventsMap> = new Dispatcher();
 
   constructor(public readonly options: MapJetOptions) {
     if (this.options.debug === true) {
@@ -80,7 +80,7 @@ export class MapJet {
     if (isResourcePlugin(plugin)) {
       plugin.resourceLoader.destroy();
     }
-    
+
     this.plugins.delete(plugin.id);
     this.dispatch('pluginRemoved', plugin);
     Log.info('Removed plugin', plugin);
@@ -102,15 +102,15 @@ export class MapJet {
     this.destroyed = true;
   }
 
-  public on(event: MapJetEventType, callback: (...args: any) => void) {
+  public on<E extends keyof MapJetEventsMap>(event: E, callback: (event: MapJetEventsMap[E]) => void) {
     this.dispatcher.on(event, callback);
   }
 
-  public off(event: MapJetEventType, callback: (...args: any) => void) {
+  public off<E extends keyof MapJetEventsMap>(event: E, callback: (event: MapJetEventsMap[E]) => void) {
     this.dispatcher.off(event, callback);
   }
 
-  public dispatch(event: MapJetEventType, data) {
+  public dispatch<E extends keyof MapJetEventsMap>(event: E, data: MapJetEventsMap[E]) {
     this.dispatcher.fire(event, data);
   }
 }

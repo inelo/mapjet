@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, NgZone, 
 
 import { MapJet } from '@inelo/mapjet-core';
 import { ViewPlugin } from '@inelo/mapjet-view-plugin';
-import { StyleSpecification } from 'maplibre-gl';
+import { ExamplePlugin } from './example-plugin/example-plugin';
 
 @Component({
   selector: 'libs-app-root',
@@ -27,7 +27,26 @@ export class AppComponent implements AfterViewInit {
       const viewPlugin = new ViewPlugin();
       mapCore.map.on('load', () => {
         mapCore.addPlugin(viewPlugin);
+
+        let examplePlugin;
+
+        // setTimeout(() => {
+        //   mapCore.removePlugin(examplePlugin)
+        // }, 5000);
+
+        [...Array(1)].forEach((_, i) => {
+          if (!examplePlugin) {
+            examplePlugin = new ExamplePlugin(i);
+            mapCore.addPlugin(examplePlugin);
+          } else {
+            mapCore.removePlugin(examplePlugin);
+            examplePlugin = undefined;
+          }
+
+        })
       });
+
+
     });
   }
 
@@ -35,6 +54,10 @@ export class AppComponent implements AfterViewInit {
     const startYear = 2022;
     const currentYear = new Date().getFullYear();
     return currentYear === startYear ? `${currentYear}` : `${startYear} - ${currentYear}`;
+  }
+
+  public generatePlugin(mapCore) {
+    
   }
 
   private get defaultStyle(): any {

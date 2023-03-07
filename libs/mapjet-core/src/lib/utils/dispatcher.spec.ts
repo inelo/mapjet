@@ -3,7 +3,7 @@ import { Dispatcher } from './dispatcher';
 describe('Dispatcher', () => {
   describe('on', () => {
     it('should handle to specific event', done => {
-      const dispatcher = new Dispatcher();
+      const dispatcher = new Dispatcher<Record<string, any>>();
       const data = 'test';
 
       dispatcher.on('event', incomingData => {
@@ -15,7 +15,7 @@ describe('Dispatcher', () => {
     });
 
     it('should no handle to other events', done => {
-      const dispatcher = new Dispatcher();
+      const dispatcher = new Dispatcher<Record<string, any>>();
       const data = 'test';
 
       dispatcher.on('eventZ', () => {
@@ -32,7 +32,7 @@ describe('Dispatcher', () => {
 
   describe('off', () => {
     it('should delete callback from specific event', done => {
-      const dispatcher = new Dispatcher();
+      const dispatcher = new Dispatcher<Record<string, any>>();
       const data = 'test';
 
       const callback = () => {

@@ -121,12 +121,12 @@ describe('ViewPlugin', () => {
   });
 });
 
-const mapJetMock = (opts: Partial<Map> = {}) => {
-  const mock = jetMock();
+const mapJetMock = (opts: Partial<Map> = {}): MapJet => {
+  const mock: any = jetMock();
 
   return {
     ...mock,
-    map: <Map>{
+    map: <any>{
       ...mock.map,
       callbacks: [],
       on(event, callback) {

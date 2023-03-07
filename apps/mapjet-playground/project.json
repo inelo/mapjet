@@ -1,4 +1,5 @@
 {
+  "name": "mapjet-playground",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/mapjet-playground/src",
@@ -18,10 +19,7 @@
         "styles": ["apps/mapjet-playground/src/styles.scss", "node_modules/maplibre-gl/dist/maplibre-gl.css"],
         "scripts": [],
         "webWorkerTsConfig": "apps/mapjet-playground/tsconfig.worker.json",
-        "allowedCommonJsDependencies": [
-          "lodash",
-          "maplibre-gl"
-        ]
+        "allowedCommonJsDependencies": ["lodash", "maplibre-gl"]
       },
       "configurations": {
         "production": {

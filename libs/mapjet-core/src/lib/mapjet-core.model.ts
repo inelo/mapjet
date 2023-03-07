@@ -16,7 +16,11 @@ export type InternalMapOptions = {
   scrollZoomSpeed?: number;
 };
 
-export type MapJetEventType = 'pluginAdded' | 'pluginRemoved' | 'destroy';
+export interface MapJetEventsMap {
+  pluginAdded: MapJetPlugin;
+  pluginRemoved: MapJetPlugin;
+  destroy: MapJet;
+}
 
 export interface MapJetPlugin {
   readonly id: string;

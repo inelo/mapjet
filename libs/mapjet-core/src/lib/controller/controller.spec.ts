@@ -4,7 +4,7 @@ import { OnPlugin } from './on-plugin.decorator';
 import { Dispatcher } from '../utils/dispatcher';
 
 class MapJetMock {
-  dispatcher = new Dispatcher();
+  dispatcher = new Dispatcher<Record<string, any>>();
 
   getPlugins() {
     return [];
@@ -19,12 +19,16 @@ class MapJetMock {
   }
 }
 
-class FakeController extends MapJetController {
-  public vehcicleAdded?: any;
+interface VehiclePluginEventsMap {
+  vehicleAdded: string;
+}
 
-  @OnPlugin('vehiclesPlugin', 'vehicleAdded')
+class FakeController extends MapJetController {
+  public vehicleAdded?: any;
+
+  @OnPlugin<VehiclePluginEventsMap>('vehiclesPlugin', 'vehicleAdded')
   onVehicleAdded(data) {
-    this.vehcicleAdded = data;
+    this.vehicleAdded = data;
   }
 }
 
@@ -36,7 +40,7 @@ class FakeControllerWithoutDecorator extends MapJetController {
 
 class FakeVehiclesPlugin {
   public readonly id = 'vehiclesPlugin';
-  dispatcher = new Dispatcher();
+  dispatcher = new Dispatcher<Record<string, any>>();
 
   on(eventName, callback) {
     this.dispatcher.on(eventName, callback);
@@ -62,7 +66,7 @@ describe('MapJetController', () => {
     mapJet.dispatcher.fire('pluginAdded', plugin);
     plugin.dispatcher.fire('vehicleAdded', { id: 'vehicleid' });
 
-    expect(controller.vehcicleAdded).toEqual({ id: 'vehicleid' });
+    expect(controller.vehicleAdded).toEqual({ id: 'vehicleid' });
   });
 
   it('should bind existing plugins', () => {
