@@ -1,4 +1,4 @@
-import { Map as MapLibre } from 'maplibre-gl';
+import { Map, Map as MapLibre } from 'maplibre-gl';
 
 import { MapJet } from './mapjet-core';
 import { MapJetOptions, MapJetPlugin, MapJetResourcesPlugin } from './mapjet-core.model';
@@ -43,6 +43,10 @@ class FakeResourcePlugin implements MapJetResourcesPlugin {
 }
 
 describe('MapJet', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should create MapLibre with correct default Options', () => {
     const { map } = createCore();
 
@@ -73,6 +77,17 @@ describe('MapJet', () => {
     });
 
     expect(map.scrollZoom.setWheelZoomRate).toBeCalledWith(2.2);
+  });
+
+  it('should use map from options', () => {
+    const mapInstance: Map = new Map({ container: '', style: '' });
+
+    const { map } = createCore({
+      map: mapInstance,
+    });
+
+    expect(MapLibre).toHaveBeenCalledOnce();
+    expect(map).toEqual(mapInstance);
   });
 
   describe('addPlugin', () => {

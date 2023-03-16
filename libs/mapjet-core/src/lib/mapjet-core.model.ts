@@ -1,4 +1,4 @@
-import { MapOptions, StyleSpecification } from 'maplibre-gl';
+import { Map, MapOptions, StyleSpecification } from 'maplibre-gl';
 
 import type { MapJet } from './mapjet-core';
 import { ResourceLoader } from './utils/resource-loader/resource-loader';
@@ -10,6 +10,7 @@ export type MapJetOptions = {
   internalMapOptions?: InternalMapOptions;
   resizeObserver?: boolean;
   debug?: boolean;
+  map?: Map;
 };
 
 export type InternalMapOptions = {
@@ -32,7 +33,6 @@ export interface MapJetPlugin {
 
 export interface MapJetEventablePlugin {
   on(event: string, callback: (...args: any) => void): void;
-
   off(event: string, callback: (...args: any) => void): void;
 }
 

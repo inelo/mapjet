@@ -25,14 +25,7 @@ export class MapJet {
       Log.enable();
     }
 
-    this.map = new MapLibre({
-      container: this.options.container,
-      style: this.options.style || '',
-      dragRotate: false,
-      minZoom: 2.5,
-      center: [7, 44],
-      ...this.options.mapOptions,
-    });
+    this.map = this.performMap(this.options);
 
     if (this.options.resizeObserver !== false) {
       const resizeObserverPlugin = new ContainerResizeObserverPlugin();
@@ -112,6 +105,21 @@ export class MapJet {
 
   public dispatch<E extends keyof MapJetEventsMap>(event: E, data: MapJetEventsMap[E]) {
     this.dispatcher.fire(event, data);
+  }
+
+  private performMap(options: MapJetOptions): MapLibre {
+    if (options.map) {
+      return options.map;
+    }
+
+    return new MapLibre({
+      container: options.container,
+      style: options.style || '',
+      dragRotate: false,
+      minZoom: 2.5,
+      center: [7, 44],
+      ...options.mapOptions,
+    });
   }
 }
 
