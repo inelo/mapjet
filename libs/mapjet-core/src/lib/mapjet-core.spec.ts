@@ -234,6 +234,30 @@ describe('MapJet', () => {
     });
   });
 
+  describe('removePluginIfExists', () => {
+    it('should remove plugin and return true when plugin exists', () => {
+      const mapCore = createCore({ debug: true });
+      const plugin = new FakeResourcePlugin();
+      jest.spyOn(plugin.resourceLoader, 'destroy');
+
+      mapCore.addPlugin(plugin);
+      const result = mapCore.removePluginIfExists(plugin);
+
+      expect(result).toBeTruthy();
+      expect(plugin.resourceLoader.destroy).toHaveBeenCalledWith();
+    });
+
+    it('should return false when plugin not exists', () => {
+      const mapCore = createCore({ debug: true });
+      const plugin = new FakeResourcePlugin();
+      jest.spyOn(plugin.resourceLoader, 'destroy');
+
+      const result = mapCore.removePluginIfExists(plugin);
+
+      expect(result).toBeFalse();
+    });
+  });
+
   describe('getPlugin()', () => {
     let mapCore: MapJet;
 
@@ -252,6 +276,30 @@ describe('MapJet', () => {
       expect(mapCore.getPlugin('asdf')).toEqual(undefined);
     });
   });
+
+  describe('hasPlugin()', () => {
+    let mapCore: MapJet;
+
+    beforeEach(() => {
+      mapCore = createCore();
+    });
+
+    it('should return true when plugin is added', () => {
+      const plugin = { ...FakePlugin };
+      mapCore.addPlugin(plugin);
+
+      expect(mapCore.hasPlugin(plugin.id)).toBeTruthy();
+      expect(mapCore.hasPlugin(plugin)).toBeTruthy();
+    });
+
+    it('should return false when plugin is not added', () => {
+      const plugin = { ...FakePlugin };
+
+      expect(mapCore.hasPlugin(plugin.id)).toBeFalsy();
+      expect(mapCore.hasPlugin(plugin)).toBeFalsy();
+    });
+  });
+
 
   describe('destroy', () => {
     let mapCore: MapJet;

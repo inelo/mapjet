@@ -45,21 +45,25 @@ export class MapJetController {
     }, {});
   }
 
-  private bindPlugin(plugin: MapJetPlugin & MapJetEventablePlugin) {
+  private bindPlugin(plugin: MapJetPlugin) {
     if (this.pluginDefs[plugin.id]) {
       Object.keys(this.pluginDefs[plugin.id]).forEach(eventName => {
         this.pluginDefs[plugin.id][eventName].forEach(callback => {
-          plugin.on(eventName, callback);
+          if (isEventablePlugin(plugin)) {
+            plugin.on(eventName, callback);
+          }
         });
       });
     }
   }
 
-  private unbindPlugin(plugin: MapJetPlugin & MapJetEventablePlugin) {
+  private unbindPlugin(plugin: MapJetPlugin) {
     if (this.pluginDefs[plugin.id]) {
       Object.keys(this.pluginDefs[plugin.id]).forEach(eventName => {
         this.pluginDefs[plugin.id][eventName].forEach(callback => {
-          plugin.off(eventName, callback);
+          if (isEventablePlugin(plugin)) {
+            plugin.off(eventName, callback);
+          }
         });
       });
     }

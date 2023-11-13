@@ -1,4 +1,4 @@
-import { Feature, Map, MapEvent, MapGeoJSONFeature } from 'maplibre-gl';
+import { Map, MapGeoJSONFeature } from 'maplibre-gl';
 
 export type LayerEvent<T> = {
   cancelBubble: boolean;
@@ -23,7 +23,7 @@ export class LayerEventHandler {
     this._onMapEvent = this._onMapEvent.bind(this);
   }
 
-  public on(eventName: MapEvent, layerId: string | null, callback: (...args: any[]) => any): void {
+  public on(eventName: string, layerId: string | null, callback: (...args: any[]) => any): void {
     if (!this.defaultHandlers[eventName] && !this.handlers[eventName]) {
       // Create new event name keys in our storage maps
       this.defaultHandlers[eventName] = [];
@@ -42,7 +42,7 @@ export class LayerEventHandler {
     }
   }
 
-  public off(eventName: MapEvent, layerId: string | null, callbackRef: (...args: any[]) => any): void {
+  public off(eventName: string, layerId: string | null, callbackRef: (...args: any[]) => any): void {
     if (layerId && this.handlers[eventName] && this.handlers[eventName][layerId]) {
       this.handlers[eventName][layerId] = this.handlers[eventName][layerId].filter(cb => cb !== callbackRef);
 

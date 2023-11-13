@@ -42,7 +42,7 @@ export class MapJet {
       return;
     }
 
-    if (this.plugins.has(plugin.id)) {
+    if (this.hasPlugin(plugin)) {
       throw new Error(`Plugin with id ${plugin.id} already exists`);
     }
 
@@ -56,7 +56,7 @@ export class MapJet {
     Log.info('Added new plugin', plugin);
   }
 
-  public removePlugin(plugin: MapJetPlugin) {
+  public removePlugin(plugin: string | MapJetPlugin) {
     if (this.destroyed) {
       Log.info(
         'Mapjet was destroyed, all plugins were removed during this operation. This operation will have no effect.'
@@ -64,19 +64,32 @@ export class MapJet {
       return;
     }
 
-    if (!this.plugins.has(plugin.id)) {
-      throw new Error(`Plugin with id ${plugin.id} not exists`);
+    const pluginId: string = typeof plugin === 'object' ? plugin.id : plugin;
+    const pluginInstance: MapJetPlugin | undefined = this.plugins.get(pluginId);
+
+    if (!pluginInstance) {
+      throw new Error(`Plugin with id ${pluginId} not exists`);
     }
 
-    plugin.onRemove(this);
+    pluginInstance.onRemove(this);
 
-    if (isResourcePlugin(plugin)) {
-      plugin.resourceLoader.destroy();
+    if (isResourcePlugin(pluginInstance)) {
+      pluginInstance.resourceLoader.destroy();
     }
 
-    this.plugins.delete(plugin.id);
-    this.dispatch('pluginRemoved', plugin);
-    Log.info('Removed plugin', plugin);
+    this.plugins.delete(pluginId);
+    this.dispatch('pluginRemoved', pluginInstance);
+    Log.info('Removed plugin', pluginInstance);
+  }
+
+  public removePluginIfExists(plugin: string | MapJetPlugin): boolean {
+    try {
+      this.removePlugin(plugin);
+
+      return true;
+    } catch (_e) {
+      return false;
+    }
   }
 
   public getPlugin<T extends MapJetPlugin>(pluginId: string) {
@@ -105,6 +118,12 @@ export class MapJet {
 
   public dispatch<E extends keyof MapJetEventsMap>(event: E, data: MapJetEventsMap[E]) {
     this.dispatcher.fire(event, data);
+  }
+
+  public hasPlugin(plugin: string | MapJetPlugin): boolean {
+    const pluginId: string = typeof plugin === 'object' ? plugin.id : plugin;
+
+    return this.plugins.has(pluginId);
   }
 
   private performMap(options: MapJetOptions): MapLibre {
