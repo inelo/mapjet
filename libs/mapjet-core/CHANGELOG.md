@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/inelo/mapjet/compare/@inelo/mapjet-core@0.3.9...@inelo/mapjet-core@0.6.1) (2023-11-13)
+
+**Note:** Version bump only for package @inelo/mapjet-core
+
 ## [0.3.9](https://github.com/inelo/mapjet/compare/@inelo/mapjet-core@0.3.8...@inelo/mapjet-core@0.3.9) (2022-11-28)
 
 **Note:** Version bump only for package @inelo/mapjet-core
