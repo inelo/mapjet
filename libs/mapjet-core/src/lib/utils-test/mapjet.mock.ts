@@ -22,6 +22,7 @@ export const mapJetMock = (): MapJet =>
     },
     addPlugin() {},
     removePlugin() {},
+    removePluginIfExists() {},
     getPlugin(_t) {
       return null;
     },
