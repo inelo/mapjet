@@ -42,6 +42,10 @@ export class MapJet {
       return;
     }
 
+    if (typeof plugin.id !== 'string' && typeof plugin.id !== 'number') {
+      throw new Error(`Invalid plugin id`);
+    }
+
     if (this.hasPlugin(plugin)) {
       throw new Error(`Plugin with id ${plugin.id} already exists`);
     }
@@ -62,6 +66,10 @@ export class MapJet {
         'Mapjet was destroyed, all plugins were removed during this operation. This operation will have no effect.'
       );
       return;
+    }
+
+    if (plugin == null) {
+      throw new Error(`Invalid input`);
     }
 
     const pluginId: string = typeof plugin === 'object' ? plugin.id : plugin;
@@ -121,6 +129,10 @@ export class MapJet {
   }
 
   public hasPlugin(plugin: string | MapJetPlugin): boolean {
+    if (plugin == null) {
+      return false;
+    }
+    
     const pluginId: string = typeof plugin === 'object' ? plugin.id : plugin;
 
     return this.plugins.has(pluginId);

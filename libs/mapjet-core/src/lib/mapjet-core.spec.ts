@@ -6,7 +6,17 @@ import { ContainerResizeObserverPlugin } from './util-plugins/container-resize-o
 import { Log } from './utils/log';
 import { ResourceLoader } from './utils/resource-loader/resource-loader';
 
-jest.mock('./util-plugins/container-resize-observer/container-resize-observer.plugin');
+jest.mock('./util-plugins/container-resize-observer/container-resize-observer.plugin', () => {
+  const originalModuleMock: any = jest.genMockFromModule('./util-plugins/container-resize-observer/container-resize-observer.plugin');
+
+  return {
+    ...originalModuleMock,
+    ContainerResizeObserverPlugin: class ContainerResizeObserverPlugin extends originalModuleMock.ContainerResizeObserverPlugin {
+      id = 'containerResizePlugin';
+    },
+  };
+});
+
 jest.mock('./utils/log');
 jest.mock('maplibre-gl', () => {
   const originalModuleMock: any = jest.genMockFromModule('maplibre-gl');
@@ -18,6 +28,7 @@ jest.mock('maplibre-gl', () => {
     },
   };
 });
+
 
 const FakePlugin: MapJetPlugin = {
   id: '1234',
@@ -46,7 +57,7 @@ describe('MapJet', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-
+  
   it('should create MapLibre with correct default Options', () => {
     const { map } = createCore();
 
@@ -105,6 +116,13 @@ describe('MapJet', () => {
       mapCore.addPlugin(plugin);
 
       expect(() => mapCore.addPlugin(plugin)).toThrowError(`Plugin with id ${plugin.id} already exists`);
+    });
+
+    it('should throw error when provided incorrect plugin id', () => {
+      mapCore = createCore({ debug: true });
+      const plugin = { ...FakePlugin, id: undefined };
+
+      expect(() => mapCore.addPlugin(plugin)).toThrowError(`Invalid plugin id`);
     });
 
     it('should call onAdd callback on plugin', () => {
@@ -172,6 +190,13 @@ describe('MapJet', () => {
       const plugin = { ...FakePlugin };
 
       expect(() => mapCore.removePlugin(plugin)).toThrowError(`Plugin with id ${plugin.id} not exists`);
+    });
+
+    it('should throw error when provided incorrect plugin id', () => {
+      mapCore = createCore({ debug: true });
+
+      expect(() => mapCore.removePlugin(null)).toThrowError(`Invalid input`);
+      expect(() => mapCore.removePlugin(undefined)).toThrowError(`Invalid input`);
     });
 
     it('should call onRemove callback on plugin', () => {
